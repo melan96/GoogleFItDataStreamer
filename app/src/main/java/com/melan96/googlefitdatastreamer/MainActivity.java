@@ -1,23 +1,39 @@
 package com.melan96.googlefitdatastreamer;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.FitnessOptions;
+import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.request.OnDataPointListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnDataPointListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public void onConnected(@Nullable Bundle bundle) {
+
     }
 
-    //Create FitnessOptions variable cache
-    FitnessOptions fitnessOptions = FitnessOptions.builder()
-            .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-            .build();
+    @Override
+    public void onConnectionSuspended(int i) {
 
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onDataPoint(DataPoint dataPoint) {
+
+    }
 }
