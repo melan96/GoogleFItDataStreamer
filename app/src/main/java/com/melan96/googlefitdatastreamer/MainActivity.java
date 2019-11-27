@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentSender;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
@@ -32,12 +34,18 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            authInProgress = savedInstanceState.getBoolean(AUTH_PENDING);
+        }
+
         /*
-        *
-        * API Client Configuration
-        * GoogleFitnessAPI added
-        *
-        */
+         *
+         * API Client Configuration
+         * GoogleFitnessAPI added
+         *
+         */
+
+        //Builds a new GoogleApiClient object for communicating with the Google APIs.
 
         mApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.SENSORS_API)
@@ -45,6 +53,13 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mApiClient.connect();
 
     }
 
@@ -61,10 +76,21 @@ public class MainActivity extends AppCompatActivity implements OnDataPointListen
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
+        if (!authInProgress) {
+
+            authInProgress = true;
+            try {
+                connectionResult.startResolutionForResult(MainActivity.this, REQUEST_OAUTH);
+            } catch (IntentSender.SendIntentException e) {
+                Log.e("GoogleFitLogs", e.getLocalizedMessage());
+            }
+        }
     }
 
     @Override
     public void onDataPoint(DataPoint dataPoint) {
 
     }
+
+
 }
